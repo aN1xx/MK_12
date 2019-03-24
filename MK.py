@@ -247,7 +247,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     if player1.name == 'scorpion':
                         projectile_x_p1 = player1_x + 220
                     elif player1.name == 'sub-zero':
-                        projectile_x_p1 = player1_x + 150
+                        projectile_x_p1 = player1_x + 185
                     
                 elif event.key == pygame.K_y:
                     pressed_y = True
@@ -950,19 +950,25 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
             if p1_ability and player1.name == 'scorpion':
                 screen.blit(player1.spear, (int(projectile_x_p1), 448))
                 pygame.draw.rect(screen, (156, 156, 156), (player1_x + 200, 455, projectile_x_p1 - player1_x - 200, 10), 0)
+                if p2_inv:
+                    p2_inv = False
             
             elif p1_ability and player1.name == 'sub-zero':
-                screen.blit(player1.ice_ball, (int(projectile_x_p1), 460))    
-                
+                screen.blit(player1.ice_ball, (int(projectile_x_p1), 460))
+                if p2_inv:
+                    p2_inv = False
                 
             if p2_ability and player2.name == 'scorpion':
                 screen.blit(pygame.transform.flip(player2.spear, True, False), (int(projectile_x_p2), 448))
                 pygame.draw.rect(screen, (156, 156, 156), (75 + projectile_x_p2, 455, player2_x - projectile_x_p2 - 50, 10), 0)
+                if p1_inv:
+                    p1_inv = False
                 
             elif p2_ability and player2.name == 'sub-zero':
                 screen.blit(pygame.transform.flip(player2.ice_ball, True, False), (int(projectile_x_p2), 460))
+                if p1_inv:
+                    p1_inv = False
            
-        
                 
         pygame.draw.rect(screen, (255, 0, 0), (50, 50, 500, 50), 0)
         pygame.draw.rect(screen, (255, 0, 0), (850, 50, 500, 50), 0)
@@ -1073,6 +1079,7 @@ while is_menu:
                     pass
                 
                 elif frame_p1 == 3 and char1 == None:
+                    #pass
                     if random.randint(0, 1) == 1:
                         char1 = Sub_zero()
                         sub_zero.play()
@@ -1109,6 +1116,7 @@ while is_menu:
                     pass
                 
                 elif frame_p2 == 3 and char2 == None:
+                    #pass
                     if random.randint(0, 1) == 1:
                         char2 = Sub_zero()
                         sub_zero.play()
