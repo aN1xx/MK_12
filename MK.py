@@ -237,7 +237,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                         
                 if pressed_down and pressed_right and event.key == pygame.K_p and not p2_ability and cd_p2 <= 0:
                     p2_ability = True
-                    projectile_x_p2 = player2_x - 40
+                    projectile_x_p2 = player2_x - 35
                 
                 elif event.key == pygame.K_p:
                     pressed_p = True
@@ -998,8 +998,6 @@ char1 = None
 char2 = None
 frame_p1 = 1
 frame_p2 = 5
-frame_map_p1 = 1
-frame_map_p2 = 5
 current_map = fizmat
 
 while is_menu:
@@ -1047,6 +1045,8 @@ while is_menu:
                     maps_menu = False
                     char1 = None
                     char2 = None
+                    frame_p1 = 1
+                    frame_p2 = 5                    
             
             if event.key == pygame.K_ESCAPE:
                 if chars_menu:
