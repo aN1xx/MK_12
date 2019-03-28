@@ -8,7 +8,7 @@ pygame.mixer.init()
 size = width, height = 1400, 750
 screen = pygame.display.set_mode(size)
 clock = pygame.time.Clock()
-fps = 60 
+fps = 60
 menu = pygame.image.load(os.path.join('data\misc', 'menu.png'))
 characters_menu = pygame.image.load(os.path.join('data\misc', 'characters_menu.png'))
 characters = pygame.image.load(os.path.join('data\misc', 'characters.png'))
@@ -16,11 +16,11 @@ frame1 = pygame.image.load(os.path.join('data\misc', 'frame_player1.png'))
 frame2 = pygame.image.load(os.path.join('data\misc', 'frame_player2.png'))
 maps = pygame.image.load(os.path.join('data\misc', 'maps.png'))
 
-Almaty = pygame.image.load(os.path.join('data\maps', 'Almaty.png'))
+classic = pygame.image.load(os.path.join('data\maps', 'classic.png'))
 fizmat = pygame.image.load(os.path.join('data\maps', 'fizmat.png'))
 outworld = pygame.image.load(os.path.join('data\maps', 'outworld.png'))
-arena = pygame.image.load(os.path.join('data\maps', 'arena.png'))
-google = pygame.image.load(os.path.join('data\maps', 'google.png'))
+forest = pygame.image.load(os.path.join('data\maps', 'forest.png'))
+pit = pygame.image.load(os.path.join('data\maps', 'pit.png'))
 
 
 fight = pygame.mixer.Sound('data\sounds\sf_fight.ogg')
@@ -160,6 +160,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
     fatality = pygame.image.load(os.path.join('data\misc', 'fatality.png'))
     scorpion_wins = pygame.image.load(os.path.join('data\misc', 'scorpion_wins.png'))
     sub_zero_wins = pygame.image.load(os.path.join('data\misc', 'sub-zero_wins.png'))
+    pause_img = pygame.image.load(os.path.join('data\misc', 'pause.png'))
     
     sz_fat1 = pygame.mixer.Sound('data\sounds\sz_fat1.ogg')
     sz_fat2 = pygame.mixer.Sound('data\sounds\sz_fat2.ogg')
@@ -168,6 +169,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
     
     quit = False
     running = True
+    pause = False
     fight.play()
     while running:
         
@@ -194,8 +196,6 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                 if event.key == pygame.K_s:
                     pressed_s = True
                     
-                
-                    
                 if event.key == pygame.K_t and kombo_time_p1 >= 1 and not p1_inv and not kombo_p1:
                     kombo_time_p1 = 0
                     stop_p1 = True
@@ -220,7 +220,13 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     pressed_up = True             
                             
                 if event.key == pygame.K_DOWN:
-                    pressed_down = True                 
+                    pressed_down = True
+                
+                if event.key == pygame.K_ESCAPE:
+                    if pause:
+                        pause = False
+                    else:
+                        pause = True                
                             
                 if event.key == pygame.K_o and kombo_time_p2 >= 1 and not p2_inv and not kombo_p2:
                     kombo_time_p2 = 0
@@ -290,7 +296,10 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     p1_image = player1.stand
                     stop_p1 = False
                  
-        if p1_win:
+        if pause:
+            screen.blit(pause_img, (0, 0))        
+        
+        elif p1_win:
             
             p1_image = player1.stand
             p2_image = player2.finish
@@ -754,9 +763,6 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                 kombo_time_p1 -= 1
             
             if punch_p1 and not p1_inv: 
-                if snd1:
-                    punch.play()
-                    snd1 = False
                 if timer1 >= 5:
                     p1_image = player1.punch1
                 else:
@@ -769,12 +775,10 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     if player1_x + 220 >= player2_x and not p2_inv:
                         freeze_time_p2 = 0
                         dmg_p2 += 3
+                        punch.play()
                     snd1 = True
             
-            if kombo_p1 and not p1_inv:
-                if snd1:
-                    punch.play()
-                    snd1 = False                
+            if kombo_p1 and not p1_inv:              
                 if ktimer_p1 >= 10:
                     p1_image = player1.kombo1
                 else:
@@ -787,6 +791,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     snd1 = True
                     if player1_x + 210 >= player2_x and not p2_inv:
                         dmg_p2 += 5
+                        punch.play()
                         stun_timer_p2 = 0
                         p2_inv_timer = 50
                         p2_inv = True
@@ -863,10 +868,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                 kombo_time_p2 -= 1
               
                 
-            if punch_p2 and not p2_inv:
-                if snd2:
-                    punch.play()
-                    snd2 = False                
+            if punch_p2 and not p2_inv:               
                 if timer2 >= 5:
                     p2_image = player2.punch1
                     shift = 20
@@ -882,13 +884,11 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     if player1_x + 220 >= player2_x and not p1_inv:
                         freeze_time_p1 = 0
                         dmg_p1 += 3
+                        punch.play()
                     snd2 = True
                         
                 
-            if kombo_p2 and not p2_inv:
-                if snd1:
-                    punch.play()
-                    snd1 = False                
+            if kombo_p2 and not p2_inv:                
                 if ktimer_p2 >= 10:
                     p2_image = player2.kombo1
                     shift = 20
@@ -904,6 +904,7 @@ def game_loop(character1 = Scorpion(), character2 = Sub_zero(), bg_map = fizmat)
                     snd2 = True
                     if player1_x + 210 >= player2_x and not p1_inv:
                         dmg_p1 += 5
+                        punch.play()
                         stun_timer_p1 = 0
                         p1_inv_timer = 50
                         p1_inv = True
@@ -1015,6 +1016,9 @@ while is_menu:
             elif 554 <= x <= 816 and 506 <= y <= 600 and event.button == 1 and not chars_menu and not maps_menu:
                 is_menu = False
                 
+            elif 179 <= x <= 364 and 470 <= y <= 653 and event.button == 1 and maps_menu:
+                current_map = forest            
+                
             elif 400 <= x <= 585 and 470 <= y <= 653 and event.button == 1 and maps_menu:
                 current_map = outworld  
                 
@@ -1022,13 +1026,10 @@ while is_menu:
                 current_map = fizmat           
                 
             elif 834 <= x <= 1019 and 470 <= y <= 653 and event.button == 1 and maps_menu:
-                current_map = Almaty          
-            
-            elif 179 <= x <= 365 and 470 <= y <= 653 and event.button == 1 and maps_menu:
-                current_map = google
-            
-            elif 1053 <= x <= 1239 and 470 <= y <= 653 and event.button == 1 and maps_menu:
-                current_map = arena
+                current_map = classic  
+                
+            elif 1053 <= x <= 1238 and 470 <= y <= 653 and event.button == 1 and maps_menu:
+                current_map = pit           
                 
             elif not chars_menu and not maps_menu and event.button == 2:
                 you_suck.play()
